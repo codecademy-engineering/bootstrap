@@ -1,0 +1,34 @@
+version: 2
+jobs:
+  build:
+    macos:
+      xcode: "11.0"
+    steps:
+      - checkout
+      - run:
+          name: "Install shellcheck"
+          command: "brew install shellcheck"
+      - run:
+          name: "Shellcheck"
+          command: "shellcheck bootstrap.sh"
+  run:
+    macos:
+      xcode: "11.0"
+    steps:
+      - checkout
+      - run:
+          name: "Run bootstrap.sh"
+          command: "./bootstrap.sh | tee -a bootstrap.log"
+
+workflows:
+  version: 2
+  build-run:
+    jobs:
+      - build
+      - run:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master

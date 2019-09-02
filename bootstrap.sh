@@ -154,6 +154,8 @@ configure_ssh() {
   log "✅ SSH configured"
 }
 
+log "⚠️  Beginning Bootstrap"
+
 install_homebrew
 brew_bundle
 launch_docker
@@ -162,3 +164,5 @@ install_ruby
 install_nodejs
 create_ssh_key
 configure_ssh
+
+log "✅ Bootstrap Complete 🚀🚀🚀"
