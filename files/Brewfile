@@ -1,0 +1,75 @@
+tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/core"
+tap "homebrew/services"
+
+##########
+# Ruby
+##########
+
+# Ruby version manager
+brew "rbenv"
+# Auto-installs gems for Ruby installs
+brew "rbenv-default-gems"
+
+##########
+# Nodejs
+##########
+
+# Manage multiple Node.js versions
+brew "nvm"
+
+##########
+# Go
+##########
+
+# Open source programming language to build simple/reliable/efficient software
+brew "go"
+# Go dependency management tool
+brew "dep"
+
+##########
+# Python3
+##########
+
+# Interpreted, interactive, object-oriented programming language
+brew "python"
+
+##########
+# Docker
+##########
+
+# Pack, ship and run any application as a lightweight container
+cask "docker"
+
+##########
+# k8s
+##########
+
+# Kubernetes command-line interface
+brew "kubernetes-cli"
+# The Kubernetes package manager
+brew "kubernetes-helm"
+# Deploy Kubernetes Helm Charts
+brew "helmfile"
+# Tool that can switch between kubectl contexts easily and create aliases
+brew "kubectx"
+
+##########
+# Misc
+##########
+
+# SSL/TLS cryptography library
+brew "openssl"
+# GNU Pretty Good Privacy (PGP) package
+brew "gnupg"
+# Lightweight and flexible command-line JSON processor
+brew "jq"
+# Object-relational database system
+brew "postgresql"
+# Static analysis and lint tool, for (ba)sh scripts
+brew "shellcheck"
+# Official Amazon AWS command-line interface
+brew "awscli"
+# https://github.com/99designs/aws-vault
+cask "aws-vault"
