@@ -10,10 +10,14 @@ Bootstrap your laptop into a lean, mean, software-shipping dev machine.
   ```sh
   sudo softwareupdate -i -a --restart
   ```
-* Install Xcode
+* Xcode
   ```sh
   xcode-select --install
   ```
+* Bash
+
+  The bootstrap script assumes you use bash and adds some required code to `~/.bash_profile`.
+  If using another shell, e.g. zsh, you'll need to accommodate that yourself.
 
 ## Usage
 
@@ -37,8 +41,7 @@ cd bootstrap
   * [Python 3.x](https://www.python.org/)
   * [Docker](https://www.docker.com/)
   * [kubectl](https://kubernetes.io/), [helm](https://helm.sh/), [helmfile](https://github.com/roboll/helmfile), and [kubectx](https://github.com/ahmetb/kubectx) for working with Kubernetes
-  * [aws-vault](https://github.com/99designs/aws-vault) for securly storing and accessing AWS credentials
-* installs [aws-cli](https://aws.amazon.com/cli/)
+  * [awscli](https://aws.amazon.com/cli/) and [aws-vault](https://github.com/99designs/aws-vault) for securly accessing AWS
 * installs the required Ruby & Bundler versions in `rbenv`
 * installs the required Nodejs & Yarn versions in `nvm`
 * creates a default ssh key at `~/.ssh/id_rsa`

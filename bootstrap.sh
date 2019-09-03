@@ -70,16 +70,6 @@ launch_docker() {
   open /Applications/Docker.app
 }
 
-install_aws() {
-  if check_installed aws; then
-    log "✅ awscli is already installed"
-  else
-    log "⚠️  Installing awscli"
-    pip3 install awscli
-    log "✅ awscli installed"
-  fi
-}
-
 install_ruby() {
   log "⚠️  Installing Ruby"
 
@@ -159,7 +149,6 @@ log "⚠️  Beginning Bootstrap"
 install_homebrew
 brew_bundle
 launch_docker
-install_aws
 install_ruby
 install_nodejs
 create_ssh_key

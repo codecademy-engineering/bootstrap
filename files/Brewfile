@@ -27,8 +27,6 @@ brew "nvm"
 brew "go"
 # Go dependency management tool
 brew "dep"
-# Simplified Go project management, dependency management, and vendoring
-brew "glide"
 
 ##########
 # Python3
@@ -71,5 +69,7 @@ brew "jq"
 brew "postgresql"
 # Static analysis and lint tool, for (ba)sh scripts
 brew "shellcheck"
+# Official Amazon AWS command-line interface
+brew "awscli"
 # https://github.com/99designs/aws-vault
 cask "aws-vault"

@@ -19,6 +19,8 @@ jobs:
       - run:
           name: "Run bootstrap.sh"
           command: "./bootstrap.sh | tee -a bootstrap.log"
+      - store_artifacts:
+          path: ./bootstrap.log
 
 workflows:
   version: 2
