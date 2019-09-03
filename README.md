@@ -1,5 +1,7 @@
 # Bootstrap
 
+[![CircleCI](https://circleci.com/gh/codecademy-engineering/bootstrap/tree/master.svg?style=shield)](https://circleci.com/gh/codecademy-engineering/bootstrap/tree/master)
+
 Bootstrap your laptop into a lean, mean, software-shipping dev machine.
 
 ## Requirements
@@ -49,4 +51,4 @@ cd bootstrap
 
 ## References
 
-Inspired by github.com/thoughtbot/laptop
+Inspired by https://github.com/thoughtbot/laptop
