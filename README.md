@@ -31,6 +31,11 @@ cd bootstrap
 ./bootstrap.sh | tee -a bootstrap.log
 ```
 
+After bootstrapping you may need to source your `bash_profile` to get new environment configurations:
+```sh
+source ~/.bash_profile
+```
+
 ## Info
 
 [bootstrap.sh](/bootstrap.sh) does the following:

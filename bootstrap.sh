@@ -85,6 +85,10 @@ install_ruby() {
 
   rbenv rehash
   rbenv versions
+
+  # shellcheck disable=SC2016
+  append_to_bash_profile 'eval "$(rbenv init -)"'
+
   log "✅ Ruby installed"
 }
 
