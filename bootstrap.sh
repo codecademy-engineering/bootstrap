@@ -106,6 +106,7 @@ install_nodejs() {
   source "/usr/local/opt/nvm/nvm.sh"
 
   nvm install "$NODE_VERSION"
+  nvm use "$NODE_VERSION"
 
   nvm alias default "$DEFAULT_NODE_VERSION"
   log "✅ Nodejs installed"
