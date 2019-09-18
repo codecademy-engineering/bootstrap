@@ -107,7 +107,7 @@ install_nodejs() {
 
   nvm install "$NODE_VERSION"
 
-  nvm alias default "$DEFAULT_NODE_VERSION"
+  nvm alias default "$NODE_VERSION"
   log "✅ Nodejs installed"
 
   # install yarn
