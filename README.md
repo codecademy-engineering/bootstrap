@@ -53,7 +53,7 @@ source ~/.bash_profile
 * installs the required Nodejs & Yarn versions in `nvm`
 * creates a default ssh key at `~/.ssh/id_rsa`
 * creates a recommended ssh config at `~/.ssh/config`
-* initializes `helm` client and the helpful `helm-diff` plugin
+* initializes `helm` client and the helpful [helm-diff](https://github.com/databus23/helm-diff) plugin
 
 ## References
 
