@@ -54,6 +54,9 @@ brew "kubernetes-helm"
 brew "helmfile"
 # Tool that can switch between kubectl contexts easily and create aliases
 brew "kubectx"
+# Kubernetes cluster creator/maintainer
+brew "kops"
+
 
 ##########
 # Misc
@@ -73,3 +76,7 @@ brew "shellcheck"
 brew "awscli"
 # https://github.com/99designs/aws-vault
 cask "aws-vault"
+# Package for GNU standards-compliant Makefiles
+brew "automake"
+GNU generic library support script
+brew "libtool"
