@@ -54,6 +54,8 @@ brew "kubernetes-helm"
 brew "helmfile"
 # Tool that can switch between kubectl contexts easily and create aliases
 brew "kubectx"
+# AWS Kubernetes Operations (kops) CLI
+brew "kops"
 
 ##########
 # Misc
