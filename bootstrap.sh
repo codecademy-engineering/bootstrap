@@ -150,8 +150,6 @@ configure_ssh() {
 }
 
 # ref: https://kubernetes.io/docs/tasks/tools/install-kubectl/#enabling-shell-autocompletion
-# to-do: should we also set up autocompletion for zsh, now that it's the
-# default shell for MacOS Catalina?
 k8s_completion() {
   # Bash
   append_to_dotfile bash_profile 'export BASH_COMPLETION_COMPAT_DIR="/usr/local/etc/bash_completion.d"'
