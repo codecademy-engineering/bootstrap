@@ -37,7 +37,7 @@ append_to_dotfile() {
   local dotfile="$1"
   local text="$2"
   local filepath="$HOME/.$dotfile"
-  if ! grep -Fqs "$text" "$filepath"; then
+  if ! grep -Fxq "$text" "$filepath"; then
     log "⚠️  Appending to $dotfile:\n\t%s" "$text"
     printf "\\n%s\\n" "$text" >> "$filepath"
   else
