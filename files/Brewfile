@@ -59,6 +59,9 @@ brew "kubectx"
 # Misc
 ##########
 
+# bash 4.1+ and bash-completion v2
+brew "bash"
+brew "bash-completion@2"
 # SSL/TLS cryptography library
 brew "openssl"
 # GNU Pretty Good Privacy (PGP) package
