@@ -33,14 +33,15 @@ check_installed() {
   fi
 }
 
-append_to_bash_profile() {
-  local text="$1"
-  local bash_profile="$HOME/.bash_profile"
-  if ! grep -Fqs "$text" "$bash_profile"; then
-    log "⚠️  Appending to bash_profile:\n\t%s" "$text"
-    printf "\\n%s\\n" "$text" >> "$bash_profile"
+append_to_dotfile() {
+  local dotfile="$1"
+  local text="$2"
+  local filepath="$HOME/.$dotfile"
+  if ! grep -Fxq "$text" "$filepath"; then
+    log "⚠️  Appending to $dotfile:\n\t%s" "$text"
+    printf "\\n%s\\n" "$text" >> "$filepath"
   else
-    log "✅ bash_profile already has:\n\t%s" "$text"
+    log "✅ $dotfile already has:\n\t%s" "$text"
   fi
 }
 
@@ -87,7 +88,7 @@ install_ruby() {
   rbenv versions
 
   # shellcheck disable=SC2016
-  append_to_bash_profile 'eval "$(rbenv init -)"'
+  append_to_dotfile bash_profile 'eval "$(rbenv init -)"'
 
   log "✅ Ruby installed"
 }
@@ -97,9 +98,9 @@ install_nodejs() {
 
   # nvm needs these in bash_profile
   # shellcheck disable=SC2016
-  append_to_bash_profile 'export NVM_DIR="$HOME/.nvm"'
-  append_to_bash_profile '[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm'
-  append_to_bash_profile '[ -s "/usr/local/opt/nvm/etc/bash_completion" ] && . "/usr/local/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion'
+  append_to_dotfile bash_profile 'export NVM_DIR="$HOME/.nvm"'
+  append_to_dotfile bash_profile '[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm'
+  append_to_dotfile bash_profile '[ -s "/usr/local/opt/nvm/etc/bash_completion" ] && . "/usr/local/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion'
 
   export NVM_DIR="$HOME/.nvm"
   # shellcheck disable=SC1091
@@ -148,6 +149,22 @@ configure_ssh() {
   log "✅ SSH configured"
 }
 
+# ref: https://kubernetes.io/docs/tasks/tools/install-kubectl/#enabling-shell-autocompletion
+k8s_completion() {
+  # Bash
+  append_to_dotfile bash_profile 'export BASH_COMPLETION_COMPAT_DIR="/usr/local/etc/bash_completion.d"'
+  append_to_dotfile bash_profile '[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"'
+  append_to_dotfile bash_profile 'alias k=kubectl'
+  append_to_dotfile bash_profile 'complete -F __start_kubectl k'
+
+  # Zsh (default shell as of MacOS Catalina)
+  append_to_dotfile zshrc 'autoload -Uz compinit'
+  append_to_dotfile zshrc 'compinit'
+  append_to_dotfile zshrc 'source <(kubectl completion zsh)'
+  append_to_dotfile zshrc 'alias k=kubectl'
+  append_to_dotfile zshrc 'complete -F __start_kubectl k'
+}
+
 initialize_helm() {
   helm init --client-only
   mkdir -p "$(helm home)/plugins"
@@ -163,6 +180,7 @@ install_ruby
 install_nodejs
 create_ssh_key
 configure_ssh
+k8s_completion
 initialize_helm
 
 log "✅ Bootstrap Complete 🚀🚀🚀"
