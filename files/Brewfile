@@ -78,5 +78,5 @@ brew "awscli"
 cask "aws-vault"
 # Package for GNU standards-compliant Makefiles
 brew "automake"
-GNU generic library support script
+# GNU generic library support script
 brew "libtool"
