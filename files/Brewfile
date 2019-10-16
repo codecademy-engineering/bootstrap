@@ -64,6 +64,8 @@ brew "bash"
 brew "bash-completion@2"
 # SSL/TLS cryptography library
 brew "openssl"
+# General-purpose command-line fuzzy finder
+brew "fzf"
 # GNU Pretty Good Privacy (PGP) package
 brew "gnupg"
 # Lightweight and flexible command-line JSON processor
