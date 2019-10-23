@@ -195,7 +195,7 @@ pin_helm() {
 initialize_helm() {
   helm init --client-only
   mkdir -p "$(helm home)/plugins"
-  helm plugin install https://github.com/databus23/helm-diff --version master
+  helm plugin install https://github.com/databus23/helm-diff --version master || true
 }
 
 log "⚠️  Beginning Bootstrap"
