@@ -49,7 +49,8 @@ cask "docker"
 # Kubernetes command-line interface
 brew "kubernetes-cli"
 # The Kubernetes package manager
-brew "kubernetes-helm"
+# To-do: See pin_helm() in bootstrap.sh.
+# brew "kubernetes-helm"
 # Deploy Kubernetes Helm Charts
 brew "helmfile"
 # Tool that can switch between kubectl contexts easily and create aliases
