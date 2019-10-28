@@ -57,7 +57,7 @@ pin_forumla() {
   local formula="$1"
   local version="$2"
   local sha="$3"
-  brew unpin kubernetes-helm 2>/dev/null || true
+  brew unpin "$formula" 2>/dev/null || true
   brew unlink "$formula" 2>/dev/null || true
   brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/"${sha}"/Formula/"${formula}".rb
   brew switch "$formula" "$version"
