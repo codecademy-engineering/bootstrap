@@ -142,10 +142,7 @@ install_nodejs() {
 }
 
 # for using binaries acquired by go get
-add_gopath_bin() {
-  append_to_dotfile bash_profile "export PATH=$PATH:$(go env GOPATH)/bin"
-  append_to_dotfile zshrc "export PATH=$PATH:$(go env GOPATH)/bin"
-
+git_config() {
   git config --global url."git@github.com:".insteadOf https://github.com/
   git config --global url."git://".insteadOf https://
 }
@@ -219,7 +216,7 @@ brew_bundle
 launch_docker
 install_ruby
 install_nodejs
-add_gopath_bin
+git_config
 create_ssh_key
 configure_ssh
 k8s_completion
