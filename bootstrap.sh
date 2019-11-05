@@ -141,7 +141,6 @@ install_nodejs() {
   log "✅ Yarn installed"
 }
 
-# for using binaries acquired by go get
 git_config() {
   git config --global url."git@github.com:".insteadOf https://github.com/
   git config --global url."git://".insteadOf https://
