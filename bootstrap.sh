@@ -19,8 +19,8 @@ SSH_CONFIG="$HOME/.ssh/config"
 
 log() {
   # shellcheck disable=SC2155
-  local ts=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-  local fmt="$ts\t$1"; shift
+  ts=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+  fmt="$ts\t$1"; shift
   # shellcheck disable=SC2059
   printf "\\n$fmt\\n" "$@"
 }
@@ -34,9 +34,9 @@ check_installed() {
 }
 
 append_to_dotfile() {
-  local dotfile="$1"
-  local text="$2"
-  local filepath="$HOME/.$dotfile"
+  dotfile="$1"
+  text="$2"
+  filepath="$HOME/.$dotfile"
   if ! grep -Fxq "$text" "$filepath"; then
     log "⚠️  Appending to $dotfile:\n\t%s" "$text"
     printf "\\n%s\\n" "$text" >> "$filepath"
@@ -54,9 +54,9 @@ append_to_dotfile() {
 # Homebrew/versions repository (notably https://stackoverflow.com/a/4158763).
 # However that post has a good info on how to find the SHA you need 📄
 pin_forumla() {
-  local formula="$1"
-  local version="$2"
-  local sha="$3"
+  formula="$1"
+  version="$2"
+  sha="$3"
   brew unpin "$formula" 2>/dev/null || true
   brew unlink "$formula" 2>/dev/null || true
   brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/"${sha}"/Formula/"${formula}".rb
@@ -107,9 +107,9 @@ install_ruby() {
   rbenv versions
 
   # shellcheck disable=SC2016
-  append_to_dotfile bash_profile 'eval "$(rbenv init -)"'
+  append_to_dotfile bash_profile "eval \"$(rbenv init -)\""
 
-  append_to_dotfile zshrc 'eval "$(rbenv init -)"'
+  append_to_dotfile zshrc "eval \"$(rbenv init -)\""
 
   log "✅ Ruby installed"
 }
@@ -119,16 +119,16 @@ install_nodejs() {
 
   # nvm needs these in bash_profile
   # shellcheck disable=SC2016
-  append_to_dotfile bash_profile 'export NVM_DIR="$HOME/.nvm"'
+  append_to_dotfile bash_profile "export NVM_DIR=\"$HOME/.nvm\""
   append_to_dotfile bash_profile '[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm'
   append_to_dotfile bash_profile '[ -s "/usr/local/opt/nvm/etc/bash_completion" ] && . "/usr/local/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion'
 
-  append_to_dotfile zshrc 'export NVM_DIR="$HOME/.nvm"'
+  append_to_dotfile zshrc "export NVM_DIR=\"$HOME/.nvm\""
   append_to_dotfile zshrc '[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm'
 
   export NVM_DIR="$HOME/.nvm"
   # shellcheck disable=SC1091
-  source "/usr/local/opt/nvm/nvm.sh"
+  . "/usr/local/opt/nvm/nvm.sh"
 
   nvm install "$NODE_VERSION"
 
@@ -143,8 +143,8 @@ install_nodejs() {
 
 # for using binaries acquired by go get
 add_gopath_bin() {
-  append_to_dotfile bash_profile 'export PATH=$PATH:$(go env GOPATH)/bin'
-  append_to_dotfile zshrc 'export PATH=$PATH:$(go env GOPATH)/bin'
+  append_to_dotfile bash_profile "export PATH=$PATH:$(go env GOPATH)/bin"
+  append_to_dotfile zshrc "export PATH=$PATH:$(go env GOPATH)/bin"
 }
 
 create_ssh_key() {
@@ -158,8 +158,8 @@ create_ssh_key() {
 }
 
 configure_ssh() {
-  local header="# BEGIN ADDED BY BOOTSTRAP"
-  local footer="# END ADDED BY BOOTSTRAP"
+  header="# BEGIN ADDED BY BOOTSTRAP"
+  footer="# END ADDED BY BOOTSTRAP"
   log "⚠️  Configuring SSH"
 
   # remove anything previously added by bootstrap
