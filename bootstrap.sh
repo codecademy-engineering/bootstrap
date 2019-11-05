@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 ####################
 # VARS             #
@@ -109,6 +109,8 @@ install_ruby() {
   # shellcheck disable=SC2016
   append_to_dotfile bash_profile 'eval "$(rbenv init -)"'
 
+  append_to_dotfile zshrc 'eval "$(rbenv init -)"'
+
   log "✅ Ruby installed"
 }
 
@@ -121,6 +123,9 @@ install_nodejs() {
   append_to_dotfile bash_profile '[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm'
   append_to_dotfile bash_profile '[ -s "/usr/local/opt/nvm/etc/bash_completion" ] && . "/usr/local/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion'
 
+  append_to_dotfile zshrc 'export NVM_DIR="$HOME/.nvm"'
+  append_to_dotfile zshrc '[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm'
+
   export NVM_DIR="$HOME/.nvm"
   # shellcheck disable=SC1091
   source "/usr/local/opt/nvm/nvm.sh"
@@ -132,8 +137,14 @@ install_nodejs() {
 
   # install yarn
   log "⚠️  Installing Yarn"
-  curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version "$YARN_VERSION"
+  curl -o- -L https://yarnpkg.com/install.sh | sh -s -- --version "$YARN_VERSION"
   log "✅ Yarn installed"
+}
+
+# for using binaries acquired by go get
+add_gopath_bin() {
+  append_to_dotfile bash_profile 'export PATH=$PATH:$(go env GOPATH)/bin'
+  append_to_dotfile zshrc 'export PATH=$PATH:$(go env GOPATH)/bin'
 }
 
 create_ssh_key() {
@@ -205,6 +216,7 @@ brew_bundle
 launch_docker
 install_ruby
 install_nodejs
+add_gopath_bin
 create_ssh_key
 configure_ssh
 k8s_completion
