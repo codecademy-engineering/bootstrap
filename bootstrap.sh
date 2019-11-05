@@ -145,6 +145,9 @@ install_nodejs() {
 add_gopath_bin() {
   append_to_dotfile bash_profile 'export PATH=$PATH:$(go env GOPATH)/bin'
   append_to_dotfile zshrc 'export PATH=$PATH:$(go env GOPATH)/bin'
+
+  git config --global url."git@github.com:".insteadOf https://github.com/
+  git config --global url."git://".insteadOf https://
 }
 
 create_ssh_key() {
