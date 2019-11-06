@@ -214,7 +214,7 @@ initialize_helm() {
 # Once v3.0.0 is released, the Homebrew formula will be updated and we can
 # unpin when we're ready.
 install_helm3() {
-  local helm_version=v3.0.0-rc.3
+  helm_version=v3.0.0-rc.3
   curl -sSLO "https://get.helm.sh/helm-$helm_version-darwin-amd64.tar.gz"
   sudo mkdir -p "/usr/local/helm-$helm_version"
   sudo tar -xzf "helm-$helm_version-darwin-amd64.tar.gz" -C "/usr/local/helm-$helm_version"
