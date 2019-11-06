@@ -207,7 +207,19 @@ pin_helm() {
 initialize_helm() {
   helm init --client-only
   mkdir -p "$(helm home)/plugins"
-  helm plugin install https://github.com/databus23/helm-diff --version master || true
+  helm plugin install https://github.com/databus23/helm-diff --version master 2>/dev/null || true
+}
+
+# Until we fully adopt Helm v3, install 'helm3' (v3) alongside 'helm' (v2).
+# Once v3.0.0 is released, the Homebrew formula will be updated and we can
+# unpin when we're ready.
+install_helm3() {
+  local helm_version=v3.0.0-rc.3
+  curl -sSLO "https://get.helm.sh/helm-$helm_version-darwin-amd64.tar.gz"
+  sudo mkdir -p "/usr/local/helm-$helm_version"
+  sudo tar -xzf "helm-$helm_version-darwin-amd64.tar.gz" -C "/usr/local/helm-$helm_version"
+  sudo ln -sf "/usr/local/helm-$helm_version/darwin-amd64/helm" /usr/local/bin/helm3
+  rm "helm-$helm_version-darwin-amd64.tar.gz"
 }
 
 log "⚠️  Beginning Bootstrap"
@@ -223,5 +235,6 @@ configure_ssh
 k8s_completion
 pin_helm
 initialize_helm
+install_helm3
 
 log "✅ Bootstrap Complete 🚀🚀🚀"
