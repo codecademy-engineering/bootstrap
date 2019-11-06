@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 ####################
 # VARS             #
@@ -19,8 +19,8 @@ SSH_CONFIG="$HOME/.ssh/config"
 
 log() {
   # shellcheck disable=SC2155
-  local ts=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-  local fmt="$ts\t$1"; shift
+  ts=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+  fmt="$ts\t$1"; shift
   # shellcheck disable=SC2059
   printf "\\n$fmt\\n" "$@"
 }
@@ -33,10 +33,15 @@ check_installed() {
   fi
 }
 
+append_to_dotfiles() {
+  append_to_dotfile bash_profile "$1"
+  append_to_dotfile zshrc "$1"
+}
+
 append_to_dotfile() {
-  local dotfile="$1"
-  local text="$2"
-  local filepath="$HOME/.$dotfile"
+  dotfile="$1"
+  text="$2"
+  filepath="$HOME/.$dotfile"
   if ! grep -Fxq "$text" "$filepath"; then
     log "⚠️  Appending to $dotfile:\n\t%s" "$text"
     printf "\\n%s\\n" "$text" >> "$filepath"
@@ -54,9 +59,9 @@ append_to_dotfile() {
 # Homebrew/versions repository (notably https://stackoverflow.com/a/4158763).
 # However that post has a good info on how to find the SHA you need 📄
 pin_forumla() {
-  local formula="$1"
-  local version="$2"
-  local sha="$3"
+  formula="$1"
+  version="$2"
+  sha="$3"
   brew unpin "$formula" 2>/dev/null || true
   brew unlink "$formula" 2>/dev/null || true
   brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/"${sha}"/Formula/"${formula}".rb
@@ -107,7 +112,7 @@ install_ruby() {
   rbenv versions
 
   # shellcheck disable=SC2016
-  append_to_dotfile bash_profile 'eval "$(rbenv init -)"'
+  append_to_dotfiles "eval \"$(rbenv init -)\""
 
   log "✅ Ruby installed"
 }
@@ -115,15 +120,17 @@ install_ruby() {
 install_nodejs() {
   log "⚠️  Installing Nodejs"
 
-  # nvm needs these in bash_profile
+  # nvm needs these in dotfile
   # shellcheck disable=SC2016
-  append_to_dotfile bash_profile 'export NVM_DIR="$HOME/.nvm"'
-  append_to_dotfile bash_profile '[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm'
+  append_to_dotfiles "export NVM_DIR=\"$HOME/.nvm\""
+  append_to_dotfiles '[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm'
+
+  # bash autocomplete for nvm
   append_to_dotfile bash_profile '[ -s "/usr/local/opt/nvm/etc/bash_completion" ] && . "/usr/local/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion'
 
   export NVM_DIR="$HOME/.nvm"
   # shellcheck disable=SC1091
-  source "/usr/local/opt/nvm/nvm.sh"
+  . "/usr/local/opt/nvm/nvm.sh"
 
   nvm install "$NODE_VERSION"
 
@@ -132,8 +139,13 @@ install_nodejs() {
 
   # install yarn
   log "⚠️  Installing Yarn"
-  curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version "$YARN_VERSION"
+  curl -o- -L https://yarnpkg.com/install.sh | sh -s -- --version "$YARN_VERSION"
   log "✅ Yarn installed"
+}
+
+git_config() {
+  git config --global url."git@github.com:".insteadOf https://github.com/
+  git config --global url."git://".insteadOf https://
 }
 
 create_ssh_key() {
@@ -147,8 +159,8 @@ create_ssh_key() {
 }
 
 configure_ssh() {
-  local header="# BEGIN ADDED BY BOOTSTRAP"
-  local footer="# END ADDED BY BOOTSTRAP"
+  header="# BEGIN ADDED BY BOOTSTRAP"
+  footer="# END ADDED BY BOOTSTRAP"
   log "⚠️  Configuring SSH"
 
   # remove anything previously added by bootstrap
@@ -173,15 +185,15 @@ k8s_completion() {
   # Bash
   append_to_dotfile bash_profile 'export BASH_COMPLETION_COMPAT_DIR="/usr/local/etc/bash_completion.d"'
   append_to_dotfile bash_profile '[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"'
-  append_to_dotfile bash_profile 'alias k=kubectl'
-  append_to_dotfile bash_profile 'complete -F __start_kubectl k'
 
   # Zsh (default shell as of MacOS Catalina)
   append_to_dotfile zshrc 'autoload -Uz compinit'
   append_to_dotfile zshrc 'compinit'
   append_to_dotfile zshrc 'source <(kubectl completion zsh)'
-  append_to_dotfile zshrc 'alias k=kubectl'
-  append_to_dotfile zshrc 'complete -F __start_kubectl k'
+
+  # Both
+  append_to_dotfiles 'alias k=kubectl'
+  append_to_dotfiles 'complete -F __start_kubectl k'
 }
 
 # Temporary shim to address https://codecademy.atlassian.net/browse/DEVOPS-1235
@@ -205,6 +217,7 @@ brew_bundle
 launch_docker
 install_ruby
 install_nodejs
+git_config
 create_ssh_key
 configure_ssh
 k8s_completion

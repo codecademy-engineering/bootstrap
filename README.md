@@ -31,7 +31,14 @@ cd bootstrap
 ./bootstrap.sh | tee -a bootstrap.log
 ```
 
-After bootstrapping you may need to source your `bash_profile` to get new environment configurations:
+After bootstrapping you may need to source your shell profile to get new environment configurations:
+
+### Zsh (default shell for Catalina)
+```sh
+source ~/.zshrc
+```
+
+### Bash
 ```sh
 source ~/.bash_profile
 ```
@@ -54,6 +61,17 @@ source ~/.bash_profile
 * creates a default ssh key at `~/.ssh/id_rsa`
 * creates a recommended ssh config at `~/.ssh/config`
 * initializes `helm` client and the helpful [helm-diff](https://github.com/databus23/helm-diff) plugin
+
+## Bash on Catalina
+
+As of MacOS Catalina (10.15), `bash` is no longer the default shell. The default shell going forward is `zsh`.
+If you want to continue to use `bash`, change your default shell:
+
+```sh
+chsh -s /bin/bash
+```
+
+After this, close and reopen Terminal. It will be running `bash` as the default shell.
 
 ## References
 
