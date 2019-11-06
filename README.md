@@ -68,10 +68,11 @@ As of MacOS Catalina (10.15), `bash` is no longer the default shell. The default
 If you want to continue to use `bash`, change your default shell:
 
 ```sh
-chsh -s /bin/bash
+# Path to current bash binary installed with homebrew by bootstrap.sh
+chsh -s /usr/local/bin/bash
 ```
 
-After this, close and reopen Terminal. It will be running `bash` as the default shell.
+After this, close and reopen Terminal. It will be running `bash` as the default shell. For more info see [HT208050](https://support.apple.com/en-us/HT208050).
 
 ## References
 
