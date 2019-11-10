@@ -85,3 +85,5 @@ cask "aws-vault"
 brew "automake"
 # GNU generic library support script
 brew "libtool"
+
+brew "terraform"
