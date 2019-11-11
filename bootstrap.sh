@@ -220,6 +220,14 @@ install_helm3() {
   sudo tar -xzf "helm-$helm_version-darwin-amd64.tar.gz" -C "/usr/local/helm-$helm_version"
   sudo ln -sf "/usr/local/helm-$helm_version/darwin-amd64/helm" /usr/local/bin/helm3
   rm "helm-$helm_version-darwin-amd64.tar.gz"
+
+  # helm3 plugins
+  if ! helm3 plugin update diff 2>/dev/null; then
+    helm3 plugin install https://github.com/databus23/helm-diff
+  fi
+  if ! helm3 plugin update namespace 2>/dev/null; then
+    helm3 plugin install https://github.com/thomastaylor312/helm-namespace
+  fi
 }
 
 log "⚠️  Beginning Bootstrap"
