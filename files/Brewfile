@@ -86,4 +86,5 @@ brew "automake"
 # GNU generic library support script
 brew "libtool"
 
+# Tool to build, change, and version infrastructure
 brew "terraform"
