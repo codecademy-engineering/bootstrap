@@ -8,9 +8,9 @@ Bootstrap your laptop into a lean, mean, software-shipping dev machine.
 
 * macOS
 
-  Ideally make sure macOS is up to date (this could take a while)
+  Ideally make sure macOS is up to date (this could take a while, and may require restarting)
   ```sh
-  sudo softwareupdate -i -a --restart
+  sudo softwareupdate -i -a
   ```
 * Xcode
   ```sh
