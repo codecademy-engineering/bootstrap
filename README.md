@@ -31,7 +31,7 @@ cd bootstrap
 ./bootstrap.sh | tee -a bootstrap.log
 ```
 
-It should print `✅ Bootstrap Complete 🚀🚀🚀`.
+It should print `✅ Bootstrap Complete 🚀🚀🚀` upon completion.
 
 After bootstrapping you may need to source your shell profile to get new environment configurations:
 
