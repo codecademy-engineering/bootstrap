@@ -225,3 +225,4 @@ pin_helm
 initialize_helm
 
 log "✅ Bootstrap Complete 🚀🚀🚀"
+log "👉 Restart your terminal window to enjoy your bootstrapped goodness. 👈"
