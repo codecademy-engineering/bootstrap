@@ -81,6 +81,8 @@ brew "shellcheck"
 brew "awscli"
 # https://github.com/99designs/aws-vault
 cask "aws-vault"
+# Session Manager Plugin for the AWS CLI
+cask "session-manager-plugin"
 # Package for GNU standards-compliant Makefiles
 brew "automake"
 # GNU generic library support script

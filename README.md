@@ -16,9 +16,9 @@ Bootstrap your laptop into a lean, mean, software-shipping dev machine.
   ```sh
   xcode-select --install
   ```
-* Bash
+* Bash or Zsh
 
-  The bootstrap script assumes you use bash and adds some required code to `~/.bash_profile`.
+  The bootstrap script assumes you use bash or zsh and adds required configuration to `~/.bash_profile` and `~/.zshrc` respectively.
   If using another shell, e.g. zsh, you'll need to accommodate that yourself.
 
 ## Usage
