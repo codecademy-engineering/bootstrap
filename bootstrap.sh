@@ -89,6 +89,7 @@ brew_bundle() {
     brew bundle --file=./files/Brewfile
 
   # add "keg-only" formulae to the path, e.g see `brew info awscli@1`
+  # shellcheck disable=SC2016
   append_to_dotfiles 'export PATH="/usr/local/opt/awscli@1/bin:$PATH"'
 
   log "✅ Homebrew packages up to date"
