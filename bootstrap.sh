@@ -87,6 +87,10 @@ brew_bundle() {
   log "⚠️  Installing homebrew packages from Brewfile"
   brew update && \
     brew bundle --file=./files/Brewfile
+
+  # add "keg-only" formulae to the path, e.g see `brew info awscli@1`
+  append_to_dotfiles 'export PATH="/usr/local/opt/awscli@1/bin:$PATH"'
+
   log "✅ Homebrew packages up to date"
 }
 
