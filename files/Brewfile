@@ -2,6 +2,7 @@ tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/core"
 tap "homebrew/services"
+tap "mongodb/brew"
 
 ##########
 # Ruby
@@ -90,3 +91,6 @@ brew "libtool"
 
 # Tool to build, change, and version infrastructure
 brew "terraform"
+
+# High-performance, schema-free, document-oriented database
+brew "mongodb/brew/mongodb-community@3.6"
