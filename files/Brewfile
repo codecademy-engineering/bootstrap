@@ -89,6 +89,9 @@ brew "automake"
 # GNU generic library support script
 brew "libtool"
 
+# Manipulates uploaded images
+brew "imagemagick"
+
 # Tool to build, change, and version infrastructure
 brew "terraform"
 
