@@ -4,7 +4,7 @@
 # VARS             #
 ####################
 
-RUBY_VERSION="2.5.5"
+RUBY_VERSION="2.5.8"
 BUNDLER_VERSION="1.17.3"
 
 NODE_VERSION="12.14.0"
