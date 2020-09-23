@@ -1,0 +1,162 @@
+---
+    - hosts: localhost
+      connection: local
+
+      vars:
+        RUBY_VERSION: "2.5.8"
+        BUNDLER_VERSION: "1.17.3"
+        NODE_VERSION: "12.14.0"
+        YARN_VERSION: "1.21.1"
+        SSH_KEY: "$HOME/.ssh/id_rsa"
+        SSH_CONFIG: "$HOME/.ssh/config"
+        EXTRA_PATH: "~/.rbenv/bin"
+
+      tasks:
+        - import_tasks: fedora.yml
+          when: ansible_facts['distribution'] == "Fedora"
+
+        - name: Clone rbenv to ~/.rbenv
+          git:
+            repo: https://github.com/rbenv/rbenv.git
+            dest: ~/.rbenv
+            update: no
+
+        - name: 'Add {{ EXTRA_PATH }} if PATH does not exist'
+          lineinfile:
+              path: ~/.bash_profile
+              line: 'export PATH="{{ EXTRA_PATH }}:$PATH"'
+              insertafter: EOF
+          when: lookup('file', '~/.bash_profile') is not search('^\s*PATH\s*=')
+
+        - name: Check ruby-build exists in ~/.rbenv/plugins
+          stat: path=~/.rbenv/plugins/ruby-build
+          register: rubybuild
+
+        - name: Install ruby-build to ~/.rbenv/plugins
+          shell: |
+            . ~/.bash_profile
+            mkdir -p ~/.rbenv/plugins
+            git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+          when: not rubybuild.stat.exists
+
+        - name: Run rbenv install script
+          script:
+            cmd: scripts/install_rbenv.sh -r {{ RUBY_VERSION }} -b {{ BUNDLER_VERSION }} -d
+          register: result
+
+        - name: Show debug output
+          debug:
+            var: result
+
+        - name: Install nvm
+          script:
+            cmd: /usr/bin/curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+          register: result
+
+        - name: Show debug output
+          debug:
+            var: result
+
+        - name: Install helmfile in ~/bin
+          get_url:
+            url: https://github.com/roboll/helmfile/releases/download/v0.129.3/helmfile_linux_amd64
+            dest: "~/bin/helmfile"
+            mode: 0764
+
+        - name: Check kops exists in ~/bin
+          stat: path=~/bin/kops
+          register: kops
+
+        - name: Install kops to ~/bin
+          shell: |
+            curl -LO https://github.com/kubernetes/kops/releases/download/$(curl -s https://api.github.com/repos/kubernetes/kops/releases/latest | grep tag_name | cut -d '"' -f 4)/kops-linux-amd64
+            chmod +x kops-linux-amd64
+            mv kops-linux-amd64 ~/bin/kops
+          when: not kops.stat.exists
+          register: result
+
+        - name: Show debug output
+          debug:
+            var: result
+
+        - name: Check awscliv2 exists in ~/bin
+          stat: path=~/bin/aws
+          register: aws
+
+        - name: Install awscli v2 to ~/bin
+          shell: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            ./aws/install --install-dir ~/bin --bin-dir ~/bin
+            rm awscliv2.zip
+          when: not aws.stat.exists
+          register: result
+
+        - name: Show debug output
+          debug:
+            var: result
+
+        - name: Check aws-vault exists in ~/bin
+          stat: path=~/bin/aws-vault
+          register: awsvault
+
+        - name: Get latest aws-vault and install in ~/bin
+          get_url:
+            url: https://github.com/99designs/aws-vault/releases/latest/download/aws-vault-linux-amd64
+            dest: "~/bin/aws-vault"
+            mode: 0764
+          when: not awsvault.stat.exists
+
+        - name: install the AWS session manager plugin rpm
+          dnf:
+            disable_gpg_check: yes
+            name: https://s3.amazonaws.com/session-manager-downloads/plugin/latest/linux_64bit/session-manager-plugin.rpm
+          become: yes
+
+        - name: Check terraform exists in ~/bin
+          stat: path=~/bin/terraform
+          register: terraform
+
+        - name: Install terraform v0.12.29 to ~/bin
+          shell: |
+            curl "https://releases.hashicorp.com/terraform/0.12.29/terraform_0.12.29_linux_amd64.zip" -o terraform_0.12.29_linux_amd64.zip
+            unzip terraform_0.12.29_linux_amd64.zip
+            mv terraform ~/bin
+            rm terraform_0.12.29_linux_amd64.zip
+          when: not terraform.stat.exists
+          register: result
+
+        - name: Show debug output
+          debug:
+            var: result
+
+        - name: Check kubectx directory exists
+          stat: path=~/.kubectx
+          register: kubectxbin
+
+        - name: Run kubectx install script
+          script:
+            cmd: scripts/install_kubectx.sh
+          when: not kubectxbin.stat.exists
+          register: result
+
+        - name: Show debug output
+          debug:
+            var: result
+
+        - name: Check kubectx links exist in bash-completion dir
+          stat: path=/usr/share/bash-completion/completions/kubectx
+          register: kubectx
+
+        - name: Install kubectx and kubens links to bash-completion dir
+          shell: |
+            COMPDIR=$(pkg-config --variable=completionsdir bash-completion)
+            sudo ln -sf {{ ansible_env.HOME }}/.kubectx/completion/kubens.bash $COMPDIR/kubens
+            sudo ln -sf {{ ansible_env.HOME }}/.kubectx/completion/kubectx.bash $COMPDIR/kubectx
+          when: not kubectx.stat.exists
+          register: result
+          become: yes
+
+        - name: Show debug output
+          debug:
+            var: result

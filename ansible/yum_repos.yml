@@ -1,0 +1,26 @@
+---
+    - hosts: localhost
+      connection: local
+
+      tasks:
+        - name: Install Kubernetes yum_repository
+          yum_repository:
+            name: kubernetes
+            baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+            description: "Kubernetes repo"
+            enabled: yes
+            gpgcheck: yes
+            gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+            repo_gpgcheck: yes
+            state: present
+
+        - name: Install mongodb-org yum_repository
+          yum_repository:
+            name: mongodb-org
+            baseurl: https://repo.mongodb.org/yum/redhat/8/mongodb-org/4.4/x86_64/
+            description: "MongDB repo"
+            enabled: yes
+            gpgcheck: yes
+            gpgkey: https://www.mongodb.org/static/pgp/server-4.4.asc
+            repo_gpgcheck: yes
+            state: present
