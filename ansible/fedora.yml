@@ -1,0 +1,33 @@
+---
+- name: Install the 'Development tools' package group
+  dnf:
+    name: '@Development tools'
+    state: present
+  become: yes
+
+- name: DNF install packages
+  dnf:
+    name:
+    - automake
+    - bash-completion
+    - curl
+    - dep
+    - fzf
+    - git
+    - gnupg2
+    - go
+    - ImageMagick
+    - jq
+    - kubectl
+    - libtool
+    - mongodb-org
+    - openssl
+    - openssl-devel
+    - postgresql
+    - readline-devel
+    - ruby
+    - ShellCheck
+    - which
+    - zlib-devel
+    state: present
+  become: yes
