@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# set -x
 usage() { echo "Usage: $0 [-r RUBY_VERSION] [-b BUNDLER_VERSION] -d" 1>&2; }
 
 while getopts "r:b:d" options; do

@@ -160,3 +160,54 @@
         - name: Show debug output
           debug:
             var: result
+
+        - name: Check helm exists in ~/bin
+          stat: path=~/bin/helm
+          register: helm
+
+        - name: Install helm v2.14.3 to ~/bin
+          shell: |
+            curl "https://get.helm.sh/helm-v2.14.3-linux-amd64.tar.gz" -o helm-v2.14.3-linux-amd64.tar.gz
+            tar xzvf helm-v2.14.3-linux-amd64.tar.gz
+            mv linux-amd64/helm ~/bin
+            mv linux-amd64/tiller ~/bin
+            rm helm-v2.14.3-linux-amd64.tar.gz
+            rm -rf linux-amd64/
+          when: not helm.stat.exists
+          register: result
+
+        - name: Check helm3 exists in ~/bin
+          stat: path=~/bin/helm3
+          register: helm3
+
+        - name: Install helm v3.3.4 to ~/bin
+          shell: |
+            curl "https://get.helm.sh/helm-v3.3.4-linux-amd64.tar.gz" -o helm-v3.3.4-linux-amd64.tar.gz
+            tar xzvf helm-v3.3.4-linux-amd64.tar.gz
+            mv linux-amd64/helm ~/bin/helm3
+            rm helm-v3.3.4-linux-amd64.tar.gz
+            rm -rf linux-amd64/
+          when: not helm3.stat.exists
+          register: result
+
+        - name: Check helm home plugins dir exists
+          stat: path=~/.helm/plugins
+          register: plugins
+
+        - name: create helm home dir
+          file:
+            path: "{{ ansible_env.HOME }}/.helm/plugins"
+            state: directory
+            mode: '0755'
+          when: not plugins.stat.exists
+
+        - name: Check helm diff exists in helm home
+          stat: path={{ ansible_env.HOME }}/.helm/plugins/diff
+          register: helmdiff
+
+        - name: Install helm-diff v2.11.0+5 to helm home
+          shell: |
+            curl -L "https://github.com/databus23/helm-diff/releases/download/v2.11.0%2B5/helm-diff-linux.tgz" | tar -C $(helm home)/plugins -xzv
+            # rm helm-diff-linux.tgz
+          when: not helmdiff.stat.exists
+          register: result

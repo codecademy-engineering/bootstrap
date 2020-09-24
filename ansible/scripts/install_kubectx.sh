@@ -14,4 +14,3 @@ cat << FOE >> ~/.bashrc
 #kubectx and kubens
 export PATH=~/.kubectx:\$PATH
 FOE
-
