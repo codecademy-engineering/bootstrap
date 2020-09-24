@@ -40,7 +40,8 @@ The below caveats are listed to inform the reader about workarounds that were ne
 * These ansible playbooks assume the user is running on Fedora 32.
 * These ansible playbooks assume the user is running the bash shell.
 * We do not install Docker currently due to the fact that Docker is not supported/functional without some
-workarounds on Fedora 32.
+workarounds on Fedora 32. Follow [this](https://fedoramagazine.org/docker-and-fedora-32/) document to install Docker on Fedora 32,
+but do not run the `firewall-cmd` commands to whitelist Docker as I had trouble with my firewall zones after I tried following them.
 * The version of helmfile is currently hardcoded to install v0.129.3 due to limitations of installing from Github releases.
 * MongoDB is installed from the RedHat 8 repository, hardcoded to version 4.4 for now because this is the latest RedHat version and MongoDB version.
 * The version of Terraform is currently hardcoded to install v0.12.29 due to limitations of installing from Github releases.

@@ -10,6 +10,11 @@
         SSH_KEY: "$HOME/.ssh/id_rsa"
         SSH_CONFIG: "$HOME/.ssh/config"
         EXTRA_PATH: "~/.rbenv/bin"
+        TERRAFORM_VERSION: "0.12.29"
+        HELM2_VERSION: "2.14.3"
+        HELM3_VERSION: "3.3.4"
+        HELM2_DIFF_VERSION: "2.11.0+5"
+        HELM2_DIFF_ESCAPED_VER: "v2.11.0%2B5"
 
       tasks:
         - import_tasks: fedora.yml
@@ -89,6 +94,7 @@
             unzip awscliv2.zip
             ./aws/install --install-dir ~/bin --bin-dir ~/bin
             rm awscliv2.zip
+            rm -rf aws
           when: not aws.stat.exists
           register: result
 
@@ -117,12 +123,12 @@
           stat: path=~/bin/terraform
           register: terraform
 
-        - name: Install terraform v0.12.29 to ~/bin
+        - name: Install terraform v{{ TERRAFORM_VERSION }} to ~/bin
           shell: |
-            curl "https://releases.hashicorp.com/terraform/0.12.29/terraform_0.12.29_linux_amd64.zip" -o terraform_0.12.29_linux_amd64.zip
-            unzip terraform_0.12.29_linux_amd64.zip
+            curl "https://releases.hashicorp.com/terraform/{{ TERRAFORM_VERSION }}/terraform_{{ TERRAFORM_VERSION }}_linux_amd64.zip" -o terraform_{{ TERRAFORM_VERSION }}_linux_amd64.zip
+            unzip terraform_{{ TERRAFORM_VERSION }}_linux_amd64.zip
             mv terraform ~/bin
-            rm terraform_0.12.29_linux_amd64.zip
+            rm terraform_{{ TERRAFORM_VERSION }}_linux_amd64.zip
           when: not terraform.stat.exists
           register: result
 
@@ -165,30 +171,38 @@
           stat: path=~/bin/helm
           register: helm
 
-        - name: Install helm v2.14.3 to ~/bin
+        - name: Install helm v{{ HELM2_VERSION }} to ~/bin
           shell: |
-            curl "https://get.helm.sh/helm-v2.14.3-linux-amd64.tar.gz" -o helm-v2.14.3-linux-amd64.tar.gz
-            tar xzvf helm-v2.14.3-linux-amd64.tar.gz
+            curl "https://get.helm.sh/helm-v{{ HELM2_VERSION }}-linux-amd64.tar.gz" -o helm-v{{ HELM2_VERSION }}-linux-amd64.tar.gz
+            tar xzvf helm-v{{ HELM2_VERSION }}-linux-amd64.tar.gz
             mv linux-amd64/helm ~/bin
             mv linux-amd64/tiller ~/bin
-            rm helm-v2.14.3-linux-amd64.tar.gz
+            rm helm-v{{ HELM2_VERSION }}-linux-amd64.tar.gz
             rm -rf linux-amd64/
           when: not helm.stat.exists
           register: result
+
+        - name: Show debug output
+          debug:
+            var: result
 
         - name: Check helm3 exists in ~/bin
           stat: path=~/bin/helm3
           register: helm3
 
-        - name: Install helm v3.3.4 to ~/bin
+        - name: Install helm v{{ HELM3_VERSION }} to ~/bin
           shell: |
-            curl "https://get.helm.sh/helm-v3.3.4-linux-amd64.tar.gz" -o helm-v3.3.4-linux-amd64.tar.gz
-            tar xzvf helm-v3.3.4-linux-amd64.tar.gz
+            curl "https://get.helm.sh/helm-v{{ HELM3_VERSION }}-linux-amd64.tar.gz" -o helm-v{{ HELM3_VERSION }}-linux-amd64.tar.gz
+            tar xzvf helm-v{{ HELM3_VERSION }}-linux-amd64.tar.gz
             mv linux-amd64/helm ~/bin/helm3
-            rm helm-v3.3.4-linux-amd64.tar.gz
+            rm helm-v{{ HELM3_VERSION }}-linux-amd64.tar.gz
             rm -rf linux-amd64/
           when: not helm3.stat.exists
           register: result
+
+        - name: Show debug output
+          debug:
+            var: result
 
         - name: Check helm home plugins dir exists
           stat: path=~/.helm/plugins
@@ -205,9 +219,26 @@
           stat: path={{ ansible_env.HOME }}/.helm/plugins/diff
           register: helmdiff
 
-        - name: Install helm-diff v2.11.0+5 to helm home
+        - name: Install helm-diff v{{ HELM2_DIFF_VERSION }} to helm home
           shell: |
-            curl -L "https://github.com/databus23/helm-diff/releases/download/v2.11.0%2B5/helm-diff-linux.tgz" | tar -C $(helm home)/plugins -xzv
-            # rm helm-diff-linux.tgz
+            curl -L "https://github.com/databus23/helm-diff/releases/download/{{ HELM2_DIFF_ESCAPED_VER }}/helm-diff-linux.tgz" | tar -C $(helm home)/plugins -xzv
           when: not helmdiff.stat.exists
           register: result
+
+        - name: Show debug output
+          debug:
+            var: result
+
+        - name: Check helm3 diff exists
+          stat: path=~/.cache/helm/plugins/https-github.com-databus23-helm-diff
+          register: helm3diff
+
+        - name: Install helm-diff for helm3
+          shell: |
+            helm3 plugin install https://github.com/databus23/helm-diff
+          register: result
+          when: not helm3diff.stat.exists
+
+        - name: Show debug output
+          debug:
+            var: result
