@@ -83,7 +83,7 @@ After this, close and reopen Terminal. It will be running `bash` as the default 
 
 * Error running `bundle install` for `pg` gem
 
-The following error was reported on `MacOS v10.15.7/xcode-select v2373` attempting to run `bundle install`, specifically the `pg -v '0.17.1'` gem.
+The following error was reported on `MacOS v10.15.7/xcode-select v2373/Ruby 1.5.8/bundler 1.17.3` attempting to run `bundle install`, specifically the `pg -v '0.17.1'` gem.
 
 ```console
 pg_connection.c:2323:3: error: implicit declaration of function 'gettimeofday' is invalid in C99
@@ -104,12 +104,20 @@ An error occurred while installing pg (0.17.1), and Bundler cannot continue.
 Make sure that `gem install pg -v '0.17.1' --source 'http://rubygems.org/'` succeeds before bundling
 ```
 
-The fix was to run the following commad, sourced [here](gem install pg -v '0.17.1' -- --with-cflags="-Wno-error=implicit-function-declaration")
+The fix was to run the following commad, sourced [here](https://stackoverflow.com/a/63583496")
 
 ```sh
 $ gem install pg -v '0.17.1' -- --with-cflags="-Wno-error=implicit-function-declaration"
 ```
-Afterwards, running `bundle install` should work
+Afterwards, running `bundle install` should work.
+
+If it doesn't work:
+    1. Verify you are up to-date on all Software.
+    2. `brew uninstall postgresql`
+    3. `brew update`
+    4. `brew install postgresql`
+    5. `bundle install`
+
 
 ## References
 
