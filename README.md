@@ -76,6 +76,38 @@ chsh -s /usr/local/bin/bash
 
 After this, close and reopen Terminal. It will be running `bash` as the default shell. For more info see [HT208050](https://support.apple.com/en-us/HT208050).
 
+## Troubleshooting
+
+* Error running `bundle install` for `pg` gem
+
+The following error was reported on `MacOS v10.15.7/xcode-select v2373` attempting to run `bundle install`, specifically the `pg -v '0.17.1'` gem.
+
+```console
+pg_connection.c:2323:3: error: implicit declaration of function 'gettimeofday' is invalid in C99
+[-Werror,-Wimplicit-function-declaration]
+        gettimeofday(&currtime, NULL);
+        ^
+pg_connection.c:2340:4: error: implicit declaration of function 'gettimeofday' is invalid in C99
+[-Werror,-Wimplicit-function-declaration]
+            gettimeofday(&currtime, NULL);
+            ^
+2 errors generated.
+make: *** [pg_connection.o] Error 1
+make failed, exit code 2
+
+. . .
+
+An error occurred while installing pg (0.17.1), and Bundler cannot continue.
+Make sure that `gem install pg -v '0.17.1' --source 'http://rubygems.org/'` succeeds before bundling
+```
+
+The fix was to run the following commad, sourced [here](gem install pg -v '0.17.1' -- --with-cflags="-Wno-error=implicit-function-declaration")
+
+```sh
+$ gem install pg -v '0.17.1' -- --with-cflags="-Wno-error=implicit-function-declaration"
+```
+Afterwards, running `bundle install` should work
+
 ## References
 
 Inspired by https://github.com/thoughtbot/laptop
