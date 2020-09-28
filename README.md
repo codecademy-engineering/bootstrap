@@ -8,7 +8,7 @@ Bootstrap your laptop into a lean, mean, software-shipping dev machine.
 
 * macOS
 
-  Ideally make sure macOS is up to date (this could take a while, and may require restarting)
+  Ideally make sure macOS is up to date (this could take a while)
   ```sh
   sudo softwareupdate -i -a
   ```
@@ -16,6 +16,9 @@ Bootstrap your laptop into a lean, mean, software-shipping dev machine.
   ```sh
   xcode-select --install
   ```
+
+RESTART AFTER RUNNING THE ABOVE. After restarting, verify in the `Software and Updates` App that your Mac has no pending updates. If it does, install them and reboot again.
+
 * Bash or Zsh
 
   The bootstrap script assumes you use bash or zsh and adds required configuration to `~/.bash_profile` and `~/.zshrc` respectively.
