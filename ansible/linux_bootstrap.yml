@@ -249,6 +249,11 @@
               mv ~/bin/tfenv ~/bin/tfenv.orig
             fi
             ln -s ~/.tfenv/bin/* ~/bin/
+            echo "Running tfenv install"
+            tfenv install
+            ver=$(tfenv list)
+            echo "Running tfenv use $ver"
+            tfenv use $ver
           register: result
 
         - name: Show debug output
