@@ -119,19 +119,6 @@
             name: https://s3.amazonaws.com/session-manager-downloads/plugin/latest/linux_64bit/session-manager-plugin.rpm
           become: yes
 
-        - name: Check terraform exists in ~/bin
-          stat: path=~/bin/terraform
-          register: terraform
-
-        - name: Install terraform v{{ TERRAFORM_VERSION }} to ~/bin
-          shell: |
-            curl "https://releases.hashicorp.com/terraform/{{ TERRAFORM_VERSION }}/terraform_{{ TERRAFORM_VERSION }}_linux_amd64.zip" -o terraform_{{ TERRAFORM_VERSION }}_linux_amd64.zip
-            unzip terraform_{{ TERRAFORM_VERSION }}_linux_amd64.zip
-            mv terraform ~/bin
-            rm terraform_{{ TERRAFORM_VERSION }}_linux_amd64.zip
-          when: not terraform.stat.exists
-          register: result
-
         - name: Show debug output
           debug:
             var: result
@@ -242,3 +229,28 @@
         - name: Show debug output
           debug:
             var: result
+
+        - name: Check if .tfenv dir exists in home
+          stat: path={{ ansible_env.HOME }}/.tfenv
+          register: tfenvdir
+
+        - name: Clone tfenv repository
+          git:
+            repo: https://github.com/tfutils/tfenv.git
+            dest: ~/.tfenv
+            update: no
+
+        - name: Create links in ~/bin to ~/.tfenv/bin
+          shell: |
+            if [ -e ~/bin/terraform ]; then
+              mv ~/bin/terraform ~/bin/terraform.orig
+            fi
+            if [ -e ~/bin/tfenv ]; then
+              mv ~/bin/tfenv ~/bin/tfenv.orig
+            fi
+            ln -s ~/.tfenv/bin/* ~/bin/
+          register: result
+
+        - name: Show debug output
+          debug:
+              var: result

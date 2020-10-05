@@ -44,6 +44,18 @@ workarounds on Fedora 32. Follow [this](https://fedoramagazine.org/docker-and-fe
 but do not run the `firewall-cmd` commands to whitelist Docker as I had trouble with my firewall zones after I tried following them.
 * The version of helmfile is currently hardcoded to install v0.129.3 due to limitations of installing from Github releases.
 * MongoDB is installed from the RedHat 8 repository, hardcoded to version 4.4 for now because this is the latest RedHat version and MongoDB version.
-* The version of Terraform is currently hardcoded to install v0.12.29 due to limitations of installing from Github releases.
 * We install both Helm v2.14.3 and Helm v3.3.4 (both hardcoded at that version currently) separately for support of some of our older apps using Helm 2.
 * The version of helm-diff is currently hardcoded to install v2.11.0+5.
+
+## Terraform
+
+We install tfenv to manage terraform versions for you, but do not configure any version initially. After this is
+installed you will want to run the following to get your versions setup as you wish:
+
+```
+tfenv install          # This will install the most recent terraform version
+tfenv use 0.13.4       # This will tell tfenv to use the most recent version
+tfenv install 0.12.29  # This will install an earlier 'major' version of terraform
+```
+
+You can switch back and forth between the two now, using `tfenv use XXX`.
