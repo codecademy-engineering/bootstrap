@@ -10,7 +10,8 @@
         SSH_KEY: "$HOME/.ssh/id_rsa"
         SSH_CONFIG: "$HOME/.ssh/config"
         EXTRA_PATH: "~/.rbenv/bin"
-        TERRAFORM_VERSION: "0.12.29"
+        TERRAFORM_13_VERSION: "0.13.4"
+        TERRAFORM_12_VERSION: "0.12.29"
         HELM2_VERSION: "2.14.3"
         HELM3_VERSION: "3.3.4"
         HELM2_DIFF_VERSION: "2.11.0+5"
@@ -250,10 +251,9 @@
             fi
             ln -s ~/.tfenv/bin/* ~/bin/
             echo "Running tfenv install"
-            tfenv install
-            ver=$(tfenv list)
-            echo "Running tfenv use $ver"
-            tfenv use $ver
+            tfenv install {{ TERRAFORM_13_VERSION }}
+            tfenv use {{ TERRAFORM_13_VERSION }}
+            tfenv install {{ TERRAFORM_12_VERSION }}
           register: result
 
         - name: Show debug output
