@@ -92,8 +92,8 @@ brew "libtool"
 # Manipulates uploaded images
 brew "imagemagick"
 
-# Tool to build, change, and version infrastructure
-brew "terraform"
+#Terraform version manager inspired by rbenv
+brew "tfenv"
 
 # High-performance, schema-free, document-oriented database
 brew "mongodb/brew/mongodb-community@3.6"
