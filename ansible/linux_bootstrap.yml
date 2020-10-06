@@ -10,7 +10,8 @@
         SSH_KEY: "$HOME/.ssh/id_rsa"
         SSH_CONFIG: "$HOME/.ssh/config"
         EXTRA_PATH: "~/.rbenv/bin"
-        TERRAFORM_VERSION: "0.12.29"
+        TERRAFORM_13_VERSION: "0.13.4"
+        TERRAFORM_12_VERSION: "0.12.29"
         HELM2_VERSION: "2.14.3"
         HELM3_VERSION: "3.3.4"
         HELM2_DIFF_VERSION: "2.11.0+5"
@@ -118,19 +119,6 @@
             disable_gpg_check: yes
             name: https://s3.amazonaws.com/session-manager-downloads/plugin/latest/linux_64bit/session-manager-plugin.rpm
           become: yes
-
-        - name: Check terraform exists in ~/bin
-          stat: path=~/bin/terraform
-          register: terraform
-
-        - name: Install terraform v{{ TERRAFORM_VERSION }} to ~/bin
-          shell: |
-            curl "https://releases.hashicorp.com/terraform/{{ TERRAFORM_VERSION }}/terraform_{{ TERRAFORM_VERSION }}_linux_amd64.zip" -o terraform_{{ TERRAFORM_VERSION }}_linux_amd64.zip
-            unzip terraform_{{ TERRAFORM_VERSION }}_linux_amd64.zip
-            mv terraform ~/bin
-            rm terraform_{{ TERRAFORM_VERSION }}_linux_amd64.zip
-          when: not terraform.stat.exists
-          register: result
 
         - name: Show debug output
           debug:
@@ -242,3 +230,32 @@
         - name: Show debug output
           debug:
             var: result
+
+        - name: Check if .tfenv dir exists in home
+          stat: path={{ ansible_env.HOME }}/.tfenv
+          register: tfenvdir
+
+        - name: Clone tfenv repository
+          git:
+            repo: https://github.com/tfutils/tfenv.git
+            dest: ~/.tfenv
+            update: no
+
+        - name: Create links in ~/bin to ~/.tfenv/bin
+          shell: |
+            if [ -e ~/bin/terraform ]; then
+              mv ~/bin/terraform ~/bin/terraform.orig
+            fi
+            if [ -e ~/bin/tfenv ]; then
+              mv ~/bin/tfenv ~/bin/tfenv.orig
+            fi
+            ln -s ~/.tfenv/bin/* ~/bin/
+            echo "Running tfenv install"
+            tfenv install {{ TERRAFORM_13_VERSION }}
+            tfenv use {{ TERRAFORM_13_VERSION }}
+            tfenv install {{ TERRAFORM_12_VERSION }}
+          register: result
+
+        - name: Show debug output
+          debug:
+              var: result
