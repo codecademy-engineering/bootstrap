@@ -13,6 +13,8 @@ YARN_VERSION="1.21.1"
 SSH_KEY="$HOME/.ssh/id_rsa"
 SSH_CONFIG="$HOME/.ssh/config"
 
+TERRAFORM_VERSION="0.13.4"
+
 ####################
 # Helpers          #
 ####################
@@ -217,6 +219,12 @@ initialize_helm() {
   helm plugin install https://github.com/databus23/helm-diff --version master || true
 }
 
+# Use tfenv to manage terraform versions.
+install_terraform() {
+  tfenv install "$TERRAFORM_VERSION"
+  tfenv use "$TERRAFORM_VERSION"
+}
+
 log "⚠️  Beginning Bootstrap"
 
 install_homebrew
@@ -230,6 +238,7 @@ configure_ssh
 k8s_completion
 pin_helm
 initialize_helm
+install_terraform
 
 log "✅ Bootstrap Complete 🚀🚀🚀"
 log "👉 Restart your terminal window to enjoy your bootstrapped goodness. 👈"
