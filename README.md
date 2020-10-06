@@ -1,6 +1,6 @@
 # Bootstrap
 
-[![CircleCI](https://circleci.com/gh/codecademy-engineering/bootstrap/tree/master.svg?style=shield)](https://circleci.com/gh/codecademy-engineering/bootstrap/tree/master)
+[![CircleCI](https://circleci.com/gh/codecademy-engineering/bootstrap/tree/main.svg?style=shield)](https://circleci.com/gh/codecademy-engineering/bootstrap/tree/main)
 
 Bootstrap your laptop into a lean, mean, software-shipping dev machine.
 
