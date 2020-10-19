@@ -63,6 +63,10 @@
           debug:
             var: result
 
+        - name: ensure the ~/bin dir exists
+          script:
+            cmd: /usr/bin/mkdir ~/bin
+
         - name: Install helmfile in ~/bin
           get_url:
             url: https://github.com/roboll/helmfile/releases/download/v0.129.3/helmfile_linux_amd64
