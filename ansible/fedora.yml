@@ -28,6 +28,7 @@
     - ruby
     - ShellCheck
     - which
+    - yarn
     - zlib-devel
     state: present
   become: yes
