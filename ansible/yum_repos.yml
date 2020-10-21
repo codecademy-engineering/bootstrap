@@ -24,3 +24,15 @@
             gpgkey: https://www.mongodb.org/static/pgp/server-4.4.asc
             repo_gpgcheck: yes
             state: present
+
+
+        - name: Install Yarn yum_repository
+          yum_repository:
+            name: yarn
+            baseurl: https://dl.yarnpkg.com/rpm/
+            description: "Yarn Repository"
+            enabled: yes
+            gpgcheck: yes
+            gpgkey: https://dl.yarnpkg.com/rpm/pubkey.gpg
+            repo_gpgcheck: yes
+            state: present
