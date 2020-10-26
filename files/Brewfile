@@ -50,9 +50,9 @@ cask "docker"
 # Kubernetes command-line interface
 brew "kubernetes-cli"
 # Kubernetes package manager
-brew "helm"
+brew "codecademy-engineering/bootstrap/helm@3.3.4"
 # Deploy Kubernetes Helm Charts
-brew "helmfile"
+brew "codecademy-engineering/bootstrap/helmfile@0.132.1"
 # Tool that can switch between kubectl contexts easily and create aliases
 brew "kubectx"
 # Kubernetes cluster creator/maintainer

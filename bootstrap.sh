@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 
+set -o errexit
+set -o nounset
+
 ####################
 # VARS             #
 ####################
@@ -52,25 +55,6 @@ append_to_dotfile() {
   fi
 }
 
-# Note there's currently no sane way to programmatically find a previous
-# formula SHA by version number (unfortunately). See:
-# - https://docs.brew.sh/Versions.html
-# - https://github.com/syhw/homebrew/blob/master/Library/Contributions/example-formula.rb
-#
-# Beware of various stackoverflow/exchange answers referencing the deprecated
-# Homebrew/versions repository (notably https://stackoverflow.com/a/4158763).
-# However that post has a good info on how to find the SHA you need 📄
-pin_formula() {
-  formula="$1"
-  version="$2"
-  sha="$3"
-  brew unpin "$formula" 2>/dev/null || true
-  brew unlink "$formula" 2>/dev/null || true
-  brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/"${sha}"/Formula/"${formula}".rb
-  brew switch "$formula" "$version"
-  brew pin "$formula"
-}
-
 ####################
 # Bootstrap Scripts #
 ####################
@@ -94,7 +78,7 @@ brew_bundle() {
   # shellcheck disable=SC2016
   append_to_dotfiles 'export PATH="/usr/local/opt/awscli@1/bin:$PATH"'
   # shellcheck disable=SC2016
-  append_to_dotfile 'export PATH="/usr/local/opt/mongodb-community@3.6/bin:$PATH"'
+  append_to_dotfiles 'export PATH="/usr/local/opt/mongodb-community@3.6/bin:$PATH"'
 
   log "✅ Homebrew packages up to date"
 }
@@ -206,7 +190,7 @@ k8s_completion() {
 }
 
 install_helm_plugins() {
-  helm plugin install https://github.com/databus23/helm-diff
+  helm plugin install https://github.com/databus23/helm-diff || true
 }
 
 # Use tfenv to manage terraform versions.
@@ -217,17 +201,23 @@ install_terraform() {
 
 log "⚠️  Beginning Bootstrap"
 
-install_homebrew
-brew_bundle
-launch_docker
-install_ruby
-install_nodejs
-git_config
-create_ssh_key
-configure_ssh
-k8s_completion
-install_helm_plugins
-install_terraform
+if [ "$#" -eq "0" ]; then
+  # No args passed: run the whole bootstrap
+  install_homebrew
+  brew_bundle
+  launch_docker
+  install_ruby
+  install_nodejs
+  git_config
+  create_ssh_key
+  configure_ssh
+  k8s_completion
+  install_helm_plugins
+  install_terraform
+else
+  # run only the specified command, e.g. ./bootstrap.sh brew_bundle
+  $@
+fi
 
 log "✅ Bootstrap Complete 🚀🚀🚀"
 log "👉 Restart your terminal window to enjoy your bootstrapped goodness. 👈"
