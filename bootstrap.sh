@@ -216,7 +216,7 @@ if [ "$#" -eq "0" ]; then
   install_terraform
 else
   # run only the specified command, e.g. ./bootstrap.sh brew_bundle
-  $@
+  "$@"
 fi
 
 log "✅ Bootstrap Complete 🚀🚀🚀"
