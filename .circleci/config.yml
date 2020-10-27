@@ -10,7 +10,7 @@ jobs:
           command: "shellcheck bootstrap.sh"
   run:
     macos:
-      xcode: "11.0"
+      xcode: "12.1"
     steps:
       - checkout
       - run:
@@ -18,6 +18,8 @@ jobs:
           command: "./bootstrap.sh | tee -a bootstrap.log"
       - store_artifacts:
           path: ./bootstrap.log
+      - store_artifacts:
+          path: ./files/Brewfile.lock.json
 
 workflows:
   version: 2

@@ -105,7 +105,7 @@ install_ruby() {
   rbenv versions
 
   # shellcheck disable=SC2016
-  append_to_dotfiles "eval \"\$(rbenv init -)\""
+  append_to_dotfiles 'eval "$(rbenv init -)"'
 
   log "✅ Ruby installed"
 }
