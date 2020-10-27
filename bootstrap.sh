@@ -8,6 +8,7 @@ set -o nounset
 ####################
 
 RUBY_VERSION="2.5.8"
+export RBENV_VERSION="$RUBY_VERSION"
 BUNDLER_VERSION="1.17.3"
 
 NODE_VERSION="12.14.0"
