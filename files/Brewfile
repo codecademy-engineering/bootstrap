@@ -3,6 +3,7 @@ tap "homebrew/cask"
 tap "homebrew/core"
 tap "homebrew/services"
 tap "mongodb/brew"
+tap "codecademy-engineering/bootstrap"
 
 ##########
 # Ruby

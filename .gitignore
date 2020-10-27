@@ -1,2 +1,6 @@
 *.log
 *.env
+
+# See https://github.com/Homebrew/homebrew-bundle/pull/552
+# This isn't a "proper" lockfile, but rather just a way to record a successful `brew bundle`
+files/Brewfile.lock.json
