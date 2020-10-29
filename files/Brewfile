@@ -88,11 +88,18 @@ cask "session-manager-plugin"
 brew "automake"
 # GNU generic library support script
 brew "libtool"
-
+# GNU File, Shell, and Text utilities
+brew "coreutils"
+# GNU implementation of the famous stream editor
+brew "gnu-sed"
+# GNU grep, egrep and fgrep
+brew "grep"
+# Collection of GNU find, xargs, and locate
+brew "findutils"
 # Manipulates uploaded images
 brew "imagemagick"
 
-#Terraform version manager inspired by rbenv
+# Terraform version manager inspired by rbenv
 brew "tfenv"
 
 # High-performance, schema-free, document-oriented database

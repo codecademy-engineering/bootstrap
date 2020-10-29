@@ -70,16 +70,18 @@ install_homebrew() {
   fi
 }
 
+# shellcheck disable=SC2016
 brew_bundle() {
   log "⚠️  Installing homebrew packages from Brewfile"
   brew update && \
     brew bundle --file=./files/Brewfile
 
-  # add "keg-only" formulae to the path, e.g see `brew info awscli@1`
-  # shellcheck disable=SC2016
   append_to_dotfiles 'export PATH="/usr/local/opt/awscli@1/bin:$PATH"'
-  # shellcheck disable=SC2016
   append_to_dotfiles 'export PATH="/usr/local/opt/mongodb-community@3.6/bin:$PATH"'
+  append_to_dotfiles 'export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"'
+  append_to_dotfiles 'export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"'
+  append_to_dotfiles 'export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"'
+  append_to_dotfiles 'export PATH="/usr/local/opt/findutils/libexec/gnubin:$PATH"'
 
   log "✅ Homebrew packages up to date"
 }
