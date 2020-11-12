@@ -22,7 +22,7 @@ RESTART AFTER RUNNING THE ABOVE. After restarting, verify in the `Software and U
 * Bash or Zsh
 
   The bootstrap script assumes you use bash or zsh and adds required configuration to `~/.bash_profile` and `~/.zshrc` respectively.
-  If using another shell, e.g. zsh, you'll need to accommodate that yourself.
+  If using another shell, e.g. ksh, you'll need to accommodate that yourself.
 
 ## Usage
 
