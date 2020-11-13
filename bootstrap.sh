@@ -77,7 +77,7 @@ brew_bundle() {
     brew bundle --file=./files/Brewfile
 
   append_to_dotfiles 'export PATH="/usr/local/opt/awscli@1/bin:$PATH"'
-  append_to_dotfiles 'export PATH="/usr/local/opt/mongodb-community@3.6/bin:$PATH"'
+  append_to_dotfiles 'export PATH="/usr/local/opt/mongodb-community@4.0/bin:$PATH"'
   append_to_dotfiles 'export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"'
   append_to_dotfiles 'export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"'
   append_to_dotfiles 'export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"'

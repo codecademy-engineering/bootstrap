@@ -103,4 +103,4 @@ brew "imagemagick"
 brew "tfenv"
 
 # High-performance, schema-free, document-oriented database
-brew "mongodb/brew/mongodb-community@3.6"
+brew "mongodb/brew/mongodb-community@4.0"
