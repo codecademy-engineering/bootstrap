@@ -56,8 +56,6 @@ brew "codecademy-engineering/bootstrap/helm@3.3.4"
 brew "codecademy-engineering/bootstrap/helmfile@0.132.1"
 # Tool that can switch between kubectl contexts easily and create aliases
 brew "kubectx"
-# Kubernetes cluster creator/maintainer
-brew "kops"
 
 ##########
 # Misc
