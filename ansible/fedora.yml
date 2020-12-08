@@ -19,6 +19,7 @@
     - ImageMagick
     - jq
     - kubectl
+    - libpq-devel
     - libtool
     - mongodb-org
     - openssl

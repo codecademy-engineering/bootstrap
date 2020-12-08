@@ -30,6 +30,9 @@ if [ -z "${RUBY_VERSION}" ] || [ -z "${BUNDLER_VERSION}" ]; then
     exit 1
 fi
 
+if ! grep -q "rbenv init" ~/.bash_profile; then
+    printf "\\n%s\\n" 'eval "$(rbenv init -)"' >> ~/.bash_profile
+fi
 eval ". ~/.bash_profile"
 eval "$(rbenv init -)"
 rbenv install --skip-existing ${RUBY_VERSION}
