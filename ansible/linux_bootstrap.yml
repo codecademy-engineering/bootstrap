@@ -21,29 +21,61 @@
         - import_tasks: fedora.yml
           when: ansible_facts['distribution'] == "Fedora"
 
+        - name: Check whether .zshrc file exists in $HOME
+          stat: path=~/.zshrc
+          register: zshrc
+
+        - name: Check whether .bash_profile file exists in $HOME
+          stat: path=~/.bash_profile
+          register: bashprofile
+
         - name: Clone rbenv to ~/.rbenv
           git:
             repo: https://github.com/rbenv/rbenv.git
             dest: ~/.rbenv
             update: no
 
-        - name: 'Add {{ EXTRA_PATH }} if PATH does not exist'
+        - name: 'Add {{ EXTRA_PATH }} to .bash_profile if not found in PATH'
           lineinfile:
               path: ~/.bash_profile
               line: 'export PATH="{{ EXTRA_PATH }}:$PATH"'
               insertafter: EOF
-          when: lookup('file', '~/.bash_profile') is not search('^\s*PATH\s*=')
+          when:
+            - bashprofile.stat.exists
+            - ansible_facts['env']['SHELL'] == "/bin/bash"
+            - lookup('file', '~/.bash_profile') is not search('^\s*PATH\s*=')
+
+        - name: 'Add {{ EXTRA_PATH }} to .zshrc if not found in PATH'
+          lineinfile:
+              path: ~/.zshrc
+              line: 'export PATH="{{ EXTRA_PATH }}:$PATH"'
+              insertafter: EOF
+          when:
+            - zshrc.stat.exists
+            - ansible_facts['env']['SHELL'] == "/bin/zsh"
+            - lookup('file', '~/.zshrc') is not search('^\s*PATH\s*=')
 
         - name: Check ruby-build exists in ~/.rbenv/plugins
           stat: path=~/.rbenv/plugins/ruby-build
           register: rubybuild
 
-        - name: Install ruby-build to ~/.rbenv/plugins
+        - name: Install ruby-build to ~/.rbenv/plugins (source .bash_profile first)
           shell: |
             . ~/.bash_profile
             mkdir -p ~/.rbenv/plugins
             git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
-          when: not rubybuild.stat.exists
+          when:
+            - not rubybuild.stat.exists
+            - ansible_facts['env']['SHELL'] == "/bin/bash"
+
+        - name: Install ruby-build to ~/.rbenv/plugins (source .zshrc first)
+          shell: |
+            . ~/.zshrc
+            mkdir -p ~/.rbenv/plugins
+            git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+          when:
+            - not rubybuild.stat.exists
+            - ansible_facts['env']['SHELL'] == "/bin/zsh"
 
         - name: Check rbenv exists in ~/.rbenv/
           stat: path=~/.rbenv/version
