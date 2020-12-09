@@ -38,7 +38,7 @@ modified as the `bootstrap.sh` shell script VARS are modified to be kept in line
 The below caveats are listed to inform the reader about workarounds that were necessary to install these tools.
 
 * These ansible playbooks assume the user is running on Fedora 32.
-* These ansible playbooks assume the user is running the bash shell.
+* These ansible playbooks assume the user is running the bash or zsh shell.
 * We do not install Docker currently due to the fact that Docker is not supported/functional without some
 workarounds on Fedora 32. Follow [this](https://fedoramagazine.org/docker-and-fedora-32/) document to install Docker on Fedora 32,
 but do not run the `firewall-cmd` commands to whitelist Docker as I had trouble with my firewall zones after I tried following them.

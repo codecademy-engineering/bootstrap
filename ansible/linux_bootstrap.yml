@@ -5,7 +5,7 @@
       vars:
         RUBY_VERSION: "2.5.8"
         BUNDLER_VERSION: "1.17.3"
-        NODE_VERSION: "12.14.0"
+        NODE_VERSION: "12.16.0"
         YARN_VERSION: "1.21.1"
         SSH_KEY: "$HOME/.ssh/id_rsa"
         SSH_CONFIG: "$HOME/.ssh/config"
@@ -21,57 +21,123 @@
         - import_tasks: fedora.yml
           when: ansible_facts['distribution'] == "Fedora"
 
+        - name: Check whether .zshrc file exists in $HOME
+          stat: path=~/.zshrc
+          register: zshrc
+
+        - name: Check whether .bash_profile file exists in $HOME
+          stat: path=~/.bash_profile
+          register: bashprofile
+
         - name: Clone rbenv to ~/.rbenv
           git:
             repo: https://github.com/rbenv/rbenv.git
             dest: ~/.rbenv
             update: no
 
-        - name: 'Add {{ EXTRA_PATH }} if PATH does not exist'
+        - name: 'Add {{ EXTRA_PATH }} to .bash_profile if not found in PATH'
           lineinfile:
               path: ~/.bash_profile
               line: 'export PATH="{{ EXTRA_PATH }}:$PATH"'
               insertafter: EOF
-          when: lookup('file', '~/.bash_profile') is not search('^\s*PATH\s*=')
+          when:
+            - bashprofile.stat.exists
+            - ansible_facts['env']['SHELL'] == "/bin/bash"
+            - lookup('file', '~/.bash_profile') is not search('^\s*PATH\s*=')
+
+        - name: 'Add {{ EXTRA_PATH }} to .zshrc if not found in PATH'
+          lineinfile:
+              path: ~/.zshrc
+              line: 'export PATH="{{ EXTRA_PATH }}:$PATH"'
+              insertafter: EOF
+          when:
+            - zshrc.stat.exists
+            - ansible_facts['env']['SHELL'] == "/bin/zsh"
+            - lookup('file', '~/.zshrc') is not search('^\s*PATH\s*=')
 
         - name: Check ruby-build exists in ~/.rbenv/plugins
           stat: path=~/.rbenv/plugins/ruby-build
           register: rubybuild
 
-        - name: Install ruby-build to ~/.rbenv/plugins
+        - name: Install ruby-build to ~/.rbenv/plugins (source .bash_profile first)
           shell: |
             . ~/.bash_profile
             mkdir -p ~/.rbenv/plugins
             git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
-          when: not rubybuild.stat.exists
+          when:
+            - not rubybuild.stat.exists
+            - ansible_facts['env']['SHELL'] == "/bin/bash"
+
+        - name: Install ruby-build to ~/.rbenv/plugins (source .zshrc first)
+          shell: |
+            . ~/.zshrc
+            mkdir -p ~/.rbenv/plugins
+            git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+          when:
+            - not rubybuild.stat.exists
+            - ansible_facts['env']['SHELL'] == "/bin/zsh"
+
+        - name: Check rbenv exists in ~/.rbenv/
+          stat: path=~/.rbenv/version
+          register: rbenvversion
 
         - name: Run rbenv install script
           script:
             cmd: scripts/install_rbenv.sh -r {{ RUBY_VERSION }} -b {{ BUNDLER_VERSION }} -d
           register: result
+          when: not rbenvversion.stat.exists
 
         - name: Show debug output
           debug:
             var: result
+
+        - name: Check .nvm dir exists in ~/
+          stat: path=~/.nvm
+          register: nvmdir
 
         - name: Install nvm
           script:
-            cmd: /usr/bin/curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+            cmd: /usr/bin/curl https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
           register: result
+          when: not nvmdir.stat.exists
 
         - name: Show debug output
           debug:
             var: result
+
+        - name: Check nvm NODE_VERSION
+          stat: path=~/.nvm/versions/node/v{{NODE_VERSION}}/bin/node
+          register: nvmnodeversion
+
+        - name: Run install_nvm_node.sh script
+          script:
+            cmd: scripts/install_nvm_node.sh -n {{ NODE_VERSION }} -d
+          register: result
+          when: not nvmnodeversion.stat.exists
+
+        - name: Show debug output
+          debug:
+            var: result
+
+        - name: Check bin dir exists in ~/
+          stat: path=~/bin
+          register: homebindir
 
         - name: ensure the ~/bin dir exists
           script:
             cmd: /usr/bin/mkdir -p ~/bin
+          when: not homebindir.stat.exists
+
+        - name: Check helmfile exists in ~/bin
+          stat: path=~/bin/helmfile
+          register: helmfile
 
         - name: Install helmfile in ~/bin
           get_url:
             url: https://github.com/roboll/helmfile/releases/download/v0.129.3/helmfile_linux_amd64
             dest: "~/bin/helmfile"
             mode: 0764
+          when: not helmfile.stat.exists
 
         - name: Show debug output
           debug:
@@ -106,6 +172,7 @@
             mode: 0764
           when: not awsvault.stat.exists
 
+        # Tried using state: latest; update_only: yes but it causes a TypeError
         - name: install the AWS session manager plugin rpm
           dnf:
             disable_gpg_check: yes
@@ -234,6 +301,10 @@
             dest: ~/.tfenv
             update: no
 
+        - name: Check if link ~/bin/tfenv exists
+          stat: path=~/bin/tfenv
+          register: tfenvbinlink
+
         - name: Create links in ~/bin to ~/.tfenv/bin
           shell: |
             if [ -e ~/bin/terraform ]; then
@@ -247,6 +318,34 @@
             tfenv install {{ TERRAFORM_13_VERSION }}
             tfenv use {{ TERRAFORM_13_VERSION }}
             tfenv install {{ TERRAFORM_12_VERSION }}
+          when: not tfenvbinlink.stat.exists
+          register: result
+
+        - name: Show debug output
+          debug:
+              var: result
+
+        # Install Docker buildx (https://github.com/docker/buildx/)
+
+        - name: Check if ~/.docker/cli-plugins exists
+          stat: path=~/.docker/cli-plugins
+          register: dockercliplugins
+
+        - name: ensure the ~/.docker/cli-plugins dir exists
+          script:
+            cmd: /usr/bin/mkdir -p ~/.docker/cli-plugins
+          when: not dockercliplugins.stat.exists
+
+        - name: Check docker-buildx exists in ~/.docker/cli-plugins
+          stat: path=~/.docker/cli-plugins/docker-buildx
+          register: buildx
+
+        - name: Get latest docker-buildx and install in ~/.docker/cli-plugins
+          get_url:
+            url: https://github.com/docker/buildx/releases/download/v0.4.2/buildx-v0.4.2.linux-amd64
+            dest: "~/.docker/cli-plugins/docker-buildx"
+            mode: 0755
+          when: not buildx.stat.exists
           register: result
 
         - name: Show debug output
