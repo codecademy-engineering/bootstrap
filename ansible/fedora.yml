@@ -11,7 +11,6 @@
     - automake
     - bash-completion
     - curl
-    - dep
     - fzf
     - git
     - gnupg2

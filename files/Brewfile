@@ -27,8 +27,6 @@ brew "nvm"
 
 # Open source programming language to build simple/reliable/efficient software
 brew "go"
-# Go dependency management tool
-brew "dep"
 
 ##########
 # Python3
