@@ -4,7 +4,7 @@
 
       vars:
         RUBY_VERSION: "2.5.8"
-        BUNDLER_VERSION: "1.17.3"
+        BUNDLER_VERSION: "2.1.4"
         NODE_VERSION: "12.16.0"
         YARN_VERSION: "1.21.1"
         SSH_KEY: "$HOME/.ssh/id_rsa"
@@ -86,6 +86,23 @@
             cmd: scripts/install_rbenv.sh -r {{ RUBY_VERSION }} -b {{ BUNDLER_VERSION }} -d
           register: result
           when: not rbenvversion.stat.exists
+
+        - name: Show debug output
+          debug:
+            var: result
+
+        - name: Get bundler version
+          ansible.builtin.shell: bundler --version | awk '{print $3}'
+          register: bundler_version_result
+          ignore_errors: true
+
+        - debug: var=bundler_version_result
+
+        - name: Run rbenv install script to upgrade bundler
+          script:
+            cmd: scripts/install_rbenv.sh -r {{ RUBY_VERSION }} -b {{ BUNDLER_VERSION }} -d
+          register: result
+          when: bundler_version_result != BUNDLER_VERSION
 
         - name: Show debug output
           debug:
