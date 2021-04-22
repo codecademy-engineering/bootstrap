@@ -7,7 +7,7 @@ set -o nounset
 # VARS             #
 ####################
 
-RUBY_VERSION="2.5.8"
+RUBY_VERSION="2.7.1"
 export RBENV_VERSION="$RUBY_VERSION"
 BUNDLER_VERSION="2.1.4"
 
