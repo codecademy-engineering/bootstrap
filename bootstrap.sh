@@ -143,6 +143,7 @@ install_nodejs() {
 install_python37_pyenv() {
   log "⚠️  Installing Python ${PYTHON_VERSION} via pyenv"
 
+  # shellcheck disable=SC2016
   append_to_dotfiles 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi'
 
   eval "$(pyenv init -)"
@@ -158,7 +159,6 @@ install_detect_secrets() {
   pyenv version
   pip install detect-secrets
   pyenv which detect-secrets
-  which detect-secrets
   log "✅ detect-secrets installed"
 }
 
