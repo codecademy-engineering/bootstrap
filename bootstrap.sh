@@ -19,6 +19,8 @@ SSH_CONFIG="$HOME/.ssh/config"
 
 TERRAFORM_VERSION="0.13.4"
 
+PYTHON_VERSION="3.7.10"
+
 ####################
 # Helpers          #
 ####################
@@ -138,6 +140,28 @@ install_nodejs() {
   log "✅ Yarn installed"
 }
 
+install_python37_pyenv() {
+  log "⚠️  Installing Python ${PYTHON_VERSION} via pyenv"
+
+  # shellcheck disable=SC2016
+  append_to_dotfiles 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi'
+
+  eval "$(pyenv init -)"
+
+  pyenv install "$PYTHON_VERSION"
+  log "✅ Python ${PYTHON_VERSION} installed"
+}
+
+install_detect_secrets() {
+  log "⚠️  Installing detect-secrets"
+  eval "$(pyenv init -)"
+  export PYENV_VERSION="$PYTHON_VERSION"
+  pyenv version
+  pip install detect-secrets
+  pyenv which detect-secrets
+  log "✅ detect-secrets installed"
+}
+
 git_config() {
   git config --global url."git@github.com:".insteadOf https://github.com/
   git config --global url."git://".insteadOf https://
@@ -216,6 +240,8 @@ if [ "$#" -eq "0" ]; then
   k8s_completion
   install_helm_plugins
   install_terraform
+  install_python37_pyenv
+  install_detect_secrets
 else
   # run only the specified command, e.g. ./bootstrap.sh brew_bundle
   "$@"

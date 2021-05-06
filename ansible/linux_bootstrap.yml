@@ -16,6 +16,7 @@
         HELM3_VERSION: "3.3.4"
         HELM2_DIFF_VERSION: "2.11.0+5"
         HELM2_DIFF_ESCAPED_VER: "v2.11.0%2B5"
+        PYTHON_VERSION: "3.7.10"
 
       tasks:
         - import_tasks: fedora.yml
@@ -368,3 +369,34 @@
         - name: Show debug output
           debug:
               var: result
+
+        - name: Clone pyenv to ~/.pyenv
+          git:
+            repo: https://github.com/pyenv/pyenv.git
+            dest: ~/.pyenv
+            update: no
+
+        - name: Install Python {{ PYTHON_VERSION }} via pyenv
+          script:
+            cmd: scripts/install_pyenv.sh -v {{ PYTHON_VERSION }} -d
+          register: result
+
+        - name: Show debug output
+          debug:
+            var: result
+
+        - name: Install detect-secrets using pyenv
+          shell: |
+            export PYENV_ROOT="$HOME/.pyenv"
+            export PATH="$PYENV_ROOT/bin:$PATH"
+            eval "$(pyenv init -)"
+            export PYENV_VERSION={{ PYTHON_VERSION }}
+            pyenv version
+            pip install detect-secrets
+            pyenv which detect-secrets
+            which detect-secrets
+          register: result
+
+        - name: Show debug output
+          debug:
+            var: result

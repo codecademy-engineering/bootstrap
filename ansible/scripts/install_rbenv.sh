@@ -31,9 +31,9 @@ if [ -z "${RUBY_VERSION}" ] || [ -z "${BUNDLER_VERSION}" ]; then
 fi
 
 if [[ "${SHELL}" = "/bin/bash" ]]; then
-    export PROFILE="~/.bash_profile"
+    export PROFILE="${HOME}/.bash_profile"
 elif [[ "${SHELL}" = "/bin/zsh" ]]; then
-    export PROFILE="~/.zshrc"
+    export PROFILE="${HOME}/.zshrc"
 fi
 
 if ! grep -q "rbenv init" ${PROFILE}; then
