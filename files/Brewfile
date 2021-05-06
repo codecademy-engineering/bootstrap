@@ -100,3 +100,6 @@ brew "tfenv"
 
 # High-performance, schema-free, document-oriented database
 brew "mongodb/brew/mongodb-community@4.0"
+
+# pyenv to manage Python versions
+brew "pyenv"
