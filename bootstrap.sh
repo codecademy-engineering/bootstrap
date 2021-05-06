@@ -154,7 +154,7 @@ install_python37_pyenv() {
 install_detect_secrets() {
   log "⚠️  Installing detect-secrets"
   eval "$(pyenv init -)"
-  export PYENV_VERSION={{ PYTHON_VERSION }}
+  export PYENV_VERSION="$PYTHON_VERSION"
   pyenv version
   pip install detect-secrets
   pyenv which detect-secrets
