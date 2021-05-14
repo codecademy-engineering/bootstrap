@@ -1,0 +1,31 @@
+#!/bin/bash
+#
+# A git hook to run detect-secrets against a repository.
+#
+
+# pull our detect-secrets image from ECR
+docker pull public.ecr.aws/b1g6d4o9/detect-secrets:latest >/dev/null 2>&1
+
+localdir=$(pwd)
+
+docker run -v ${localdir}:/usr/src/app \
+    -e DETECT_SECRETS_SECURITY_TEAM='in #infrastructure' \
+    public.ecr.aws/b1g6d4o9/detect-secrets detect-secrets-hook \
+    --baseline .secrets.baseline $(git diff --staged --name-only)
+
+RC=$?
+
+if [[ $RC -eq 1 ]]; then
+    # return code 1 from detect-secrets indicates scan found a secret in the files staged for commit
+    echo
+    echo
+    echo "ERROR: [pre-commit hook] Aborting commit because detect-secrets found a secret in this repository!"
+    echo "Please remediate the secret in the output above before committing to this repository!"
+    echo
+    echo "Documentation: https://www.notion.so/codecademy/detect-secrets-git-pre-commit-hook"
+    echo
+    exit 1
+else
+    # no secrets found in repo
+    exit 0
+fi
