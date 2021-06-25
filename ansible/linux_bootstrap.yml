@@ -4,7 +4,7 @@
 
       vars:
         RUBY_VERSION: "2.5.8"
-        BUNDLER_VERSION: "2.1.4"
+        BUNDLER_VERSION: "2.2.17"
         NODE_VERSION: "12.16.0"
         YARN_VERSION: "1.21.1"
         SSH_KEY: "$HOME/.ssh/id_rsa"
@@ -368,3 +368,20 @@
         - name: Show debug output
           debug:
               var: result
+
+        - name: Check if ~/.gitconfig exists
+          stat: path=~/.gitconfig
+          register: gitconfig
+
+        - name: Check core.hooksPath is configured in ~/.gitconfig
+          shell: |
+            grep -i 'hookspath = ~/.githooks' ~/.gitconfig
+          register: hookspathcorrectlyconfigured
+          when:
+            - gitconfig.stat.exists
+
+        - name: Configure core.hooksPath in ~/.gitconfig
+          script:
+            cmd: git config --global core.hooksPath=~/.githooks
+          when:
+            - hookspathcorrectlyconfigured is changed
